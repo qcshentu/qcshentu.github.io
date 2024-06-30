@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting</title>
+      <link href="/paper%20notes/UniTST/"/>
+      <url>/paper%20notes/UniTST/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference:<br>authors: Juncheng Liu, Chenghao Liu, Gerald Woo, Yiwei Wang, Bryan Hooi, Caiming Xiong, Doyen Sahoo<br>code:</p></div>  <p>#Transformer</p><p><img src="/img/UniTST-1.png" alt=""></p><h2 id="Flatten-patches">Flatten patches</h2><p>Like Moirai [^1]</p><h3 id="Dispatcher-mechanism">Dispatcher mechanism</h3><p>add k(k&lt;&lt;N) learnable embeddings as dispatchers and use cross attention to distribute the dependencies among tokens. <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>k</mi><mi>N</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(kN)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mclose">)</span></span></span></span></p><p>[^1]: Unified Training of Universal Time Series Forecasting Transformers</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Transformer </tag>
+            
+            <tag> 时间序列 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress</title>
+      <link href="/paper%20notes/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86/"/>
+      <url>/paper%20notes/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICDE 2022<br>authors: Reie Wu, Eam onn J. Keogh<br>code:</p></div><p>提出了 UCR 异常检 测数据集，分析现有几个数据集（Yahoo, Numenta, NASA, OMNI/SMD）的四个缺陷。</p><h2 id="1-Triviality">1. Triviality</h2><p>容易解决的，异常可以通过“一行代码”（mean, max, std, diff…）轻易发现。<br><img src="/img/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86-1.png" alt=""></p><h2 id="2-Unrealistic-Anomaly-Density">2. Unrealistic Anomaly Density</h2><p>不切实际的异常密度，NASA D-2, M-1 和 M-2，一半以上测试数据被标为异常。这种不切实际的异常密度存在许多问题。首先，<strong>它似乎模糊了分类和异常检测之间的界限</strong>。在大多数现实环境中，预计异常的先验概率仅略大于零。让一半的数据由异常组成似乎违反了这项任务的最基本假设。此外，许多算法对先验非常敏感。</p><h2 id="3-Mislabeled-Ground-Truth">3. Mislabeled Ground Truth</h2><p>标签错误</p><blockquote><p>C 所指段和 D 段几乎一致，D 为异常点而 C 是正常点<br><img src="/img/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86-2.png" alt=""></p></blockquote><blockquote><p>F 和 E 都为异常<br><img src="/img/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86-3.png" alt=""></p></blockquote><h2 id="4-Run-to-faiure-Bias">4. Run-to-faiure Bias</h2><p>Yahoo 和 NASA，异常出现在测试集的末尾 (Many realworld systems are run-to-failure)<br><img src="/img/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86-4.png" alt=""></p><h2 id="5-建议">5. 建议</h2><ul><li><p>弃用相关数据集</p></li><li><p><strong>应参考算法的不变性来解释算法</strong><br>不变性包括：幅度缩放，偏移，遮挡，噪声，线性趋势，扭曲，均匀缩放等等。<br><img src="/img/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86-5.png" alt=""></p><blockquote><p>在数据中添加噪音，Discord 仍然可以正确检测除异常，这例子表明，如果遇到噪声数据，Discord 表现的会比 Telemanom 好。</p></blockquote></li><li><p><strong>可视化数据和算法输出</strong><br>“时间序列分析本质上是一个视觉领域”。</p></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 异常检测 </tag>
+            
+            <tag> ICDE </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection</title>
+      <link href="/paper%20notes/D3R/"/>
+      <url>/paper%20notes/D3R/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #NeurIPS 2023<br>authors: Chesen Wang, Zir ui Zhuang, Qi Qi, Jingyu Wang, Xingyu Wang, Haifeng Sun, Jianxin Liao<br>code:</p></div><p><img src="/img/D3R-1.png" alt=""><br>Diffusion 瓶颈 (噪音是瓶颈，未污染数据是条件)，瓶颈层不再是模型的属性，所以可以动态设置无需再重新训练模型。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NeurIPS </tag>
+            
+            <tag> 异常检测 </tag>
+            
+            <tag> Transformer </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>MICN: MULTI-SCALE LOCAL AND GLOBAL CONTEXT MODELING FOR LONG-TERM SERIES FORECASTING</title>
+      <link href="/paper%20notes/MICN/"/>
+      <url>/paper%20notes/MICN/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICLR 2023<br>authors: Huiqiang Wang, Jian Peng, Feihu Huang, Jince Wang, Junhui Chen, Yifei Xiao<br>code:</p></div><h2 id="0-Overview">0. Overview</h2><p><img src="/img/MICN-1.png" alt=""><br>先是将输入序列送到<strong>多尺度混合分解模块</strong>中进行序列分解，得到 Seasonal 项和 Trend-Cyclical 项，分别对两者独立进行预测，最后将预测结果加起来。对于 Trend-Cyclical 项，直接采用线性回归的方式，即 Trend-Cyclical Prediction Block 就是一个线性层；对于 Seasonal 项，采用提出的 MIC 层进行预测。</p><h2 id="1-多尺度">1. 多尺度</h2><p>用平均池化得到 Trend-Cyclical 项，然后原始序列减去 Trend-Cyclical 项就得到了 Seasonal 项。考虑到<strong>平均池化的 kernel 大小控制着分解的不同模式</strong>，因此作者综合多个 kernel 的平均池化结果，将这些结果再取一个平均，得到 Trend-Cyclical 项。</p><p><a href="https://zhuanlan.zhihu.com/p/603468264">(2023 ICLR) MICN: Multi-scale Local and Global Context Modeling for Long-term Series Forecasting - 知乎 (zhihu.com)</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ICLR </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting</title>
+      <link href="/paper%20notes/PatchMixer/"/>
+      <url>/paper%20notes/PatchMixer/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference:<br>authors: Zeying Gong, Yujin Tang, Junwei Liang<br>code:</p></div><p><img src="/img/PatchMixer-1.png" alt=""></p><h2 id="1-Periodical-Patch-and-Sliding-Window-Patch">1. Periodical Patch and Sliding Window Patch</h2><p><strong>Top-k Frequencies</strong>：这种方法首先将原始的时间序列映射到频域，然后选择频域主要成分，将每个主成分的序列组织成一个二维结构。这里每个成分的时间序列可以看成是一个 patch。<br><strong>Sliding Window</strong>：这种方式根据一个窗口长度和步长在原始的时间序列上移动，抽取出多个子序列，这些子序列组织成一个 patch。这里每个子序列可以看成是一个 patch。<br>两种方式，一种是在频域上通过频率成分进行 patch 分割，另一种是在时域上将序列按照时间分成多个片段得到 patch。<br>在得到每个 patch 的数据后，下一步是生成每个 patch 的 embedding。在之前的 Transformer 类型的工作中，一般会引入 position embedding 解决 Transformer 无法建模时序的问题。而本文中，由于采用了 CNN 的结构，<strong>天然具备对序列的建模能力，因此文中没有引入任何 position embedding</strong>，而是直接通过一个 MLP 将 patch 内的序列数据映射成 embedding。</p><h2 id="2-Local-and-global-info">2. Local and global info</h2><p><img src="/img/PatchMixer-2.png" alt=""><br>两个卷积分支分别提取序列的局部信息和全局信息。对于局部信息分支，使用一个卷积在每个 patch 内进行 depthwise 的卷积（patch-in），实现 patch 维度的局部建模。同时，在全局信息分支，使用一个跨 patch 的卷积（patch-wise），建模 patch 之间的关系。</p><h2 id="3-Dual-Head">3. <code>Dual Head</code></h2><p>==通过跨越卷积的线性残差连接来提取时间变化的总体趋势（趋势项，移动平均），并在带有非线性函数的全卷积层之后使用 MLP 预测头来细致地拟合预测曲线中的微小变化。==各自的输出相加来得出预测结果。与直接使用单个线性 flatten 头相比，使用双头可以产生更有效的映射效果。</p><h2 id="4-深度可分离卷积">4. 深度可分离卷积</h2><p><a href="https://zhuanlan.zhihu.com/p/155584110">深入浅出可分离卷积 - 知乎 (zhihu.com)</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Conv </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>TIMESNET:TEMPORAL 2D-VARIATION MODELING FOR GENERAL TIME SERIES ANALYSIS</title>
+      <link href="/paper%20notes/TimesNet/"/>
+      <url>/paper%20notes/TimesNet/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICLR 2023<br>authors: Haixu Wu, Tengge Hu, Yong Liu, Hang Zhou, Jianmin Wang, Mingsheng Long<br>code: <a href="https://github.com/thuml/TimesNet">https://github.com/thuml/TimesNet</a></p></div><p><img src="/img/TimesNet.png" alt=""></p><p><img src="/img/TimesNet-1.png" alt=""></p><p><img src="/img/TimesNet-2.png" alt=""></p><p>通过 FFT 发现周期，Amp() 表示幅值。Avg 是在 c 个特征通道上做平均。挑选出 k 个幅值最大的频率，周期长度 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mfrac><mi>T</mi><msub><mi>f</mi><mi>i</mi></msub></mfrac><mo separator="true">,</mo><mo stretchy="false">(</mo><msub><mi>p</mi><mi>i</mi></msub><mo>∗</mo><msub><mi>f</mi><mi>i</mi></msub><mo>=</mo><mi>T</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_i=\frac{T}{f_i}, (p_i*f_i=T)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.3534em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8723em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.1076em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mclose">)</span></span></span></span> 。</p><p>reshape 成 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>∗</mo><msub><mi>f</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">p_i*f_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6597em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，转 2D Space，经相关 2D vision backbone 后，再 reshape back。</p><p><img src="/img/TimesNet-3.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ICLR </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Reversible Instance Normalization for Accurate Time-Series Forecasting against Distribution Shift</title>
+      <link href="/paper%20notes/RevIN/"/>
+      <url>/paper%20notes/RevIN/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICLR 2022<br>authors: Taesung Kim, Jinhee Kim, Yunwon Tae, Cheonbok Park, Jang-Ho Choi, Jaegul Choo<br>code: <a href="https://github.com/ts-kim/RevIN">https://github.com/ts-kim/RevIN</a></p></div><p><img src="/img/RevIN.png" alt=""><br>时间序列预测中的主要挑战之一是数据分布漂移问题（distribution shift problem），即数据分布，比如数据的均值方差等，会随着时间而变化，这会给时序预测问题造成一定的难度（这类数据也成为非平稳数据 non-stationary）。而在时序预测任务中，训练集和测试集往往是时间来划分的，这天然会引入训练集和测试集分布不一致的问题，此外，不同输入序列也会有数据分布不一致的问题。这两个不一致的问题都可能会导致模型效果的下降。</p><p>为了解决上述问题，可以想办法去除数据中的非平稳信息，但是如果只是简单的消除非平稳信息，会导致非平稳信息丢失，这可能会影响到模型无法学习到这部分信息，进而影响到模型效果。因此，论文提出了在模型输出后显式恢复非平稳信息的思路，这样既使模型在学习时忽略了数据漂移的问题，又避免了非平稳信息的丢失。</p><p>本篇论文提出的是一种数据规范化的方法，命名为“可逆实例规范化” （reversible instance normalization，RevIN）。具体来说，RevIN 包含两部分，规范化和逆规范化，首先在数据输入模型前，将数据进行规范化，然后经过模型学习后得到模型输出，最后对模型输出进行反规范化。RevIN 是一种灵活的，端到端的可训练层，能够被应用到任意模型层。</p><h2 id="Code">Code</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RevIN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_features: <span class="built_in">int</span>, eps=<span class="number">1e-5</span>, affine=<span class="literal">True</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        :param num_features: the number of features or channels</span></span><br><span class="line"><span class="string">        :param eps: a value added for numerical stability</span></span><br><span class="line"><span class="string">        :param affine: if True, RevIN has learnable affine parameters</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>(RevIN, self).__init__()</span><br><span class="line">        self.num_features = num_features</span><br><span class="line">        self.eps = eps</span><br><span class="line">        self.affine = affine</span><br><span class="line">        <span class="keyword">if</span> self.affine:</span><br><span class="line">            self._init_params()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, mode:<span class="built_in">str</span></span>):</span><br><span class="line">        <span class="keyword">if</span> mode == <span class="string">&#x27;norm&#x27;</span>:</span><br><span class="line">            self._get_statistics(x)</span><br><span class="line">            x = self._normalize(x)</span><br><span class="line">        <span class="keyword">elif</span> mode == <span class="string">&#x27;denorm&#x27;</span>:</span><br><span class="line">            x = self._denormalize(x)</span><br><span class="line">        <span class="keyword">else</span>: <span class="keyword">raise</span> NotImplementedError</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_init_params</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># initialize RevIN params: (C,)</span></span><br><span class="line">        self.affine_weight = nn.Parameter(torch.ones(self.num_features))</span><br><span class="line">        self.affine_bias = nn.Parameter(torch.zeros(self.num_features))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_get_statistics</span>(<span class="params">self, x</span>):</span><br><span class="line">        dim2reduce = <span class="built_in">tuple</span>(<span class="built_in">range</span>(<span class="number">1</span>, x.ndim-<span class="number">1</span>))</span><br><span class="line">        self.mean = torch.mean(x, dim=dim2reduce, keepdim=<span class="literal">True</span>).detach()</span><br><span class="line">        self.stdev = torch.sqrt(torch.var(x, dim=dim2reduce, keepdim=<span class="literal">True</span>, unbiased=<span class="literal">False</span>) + self.eps).detach()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_normalize</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = x - self.mean</span><br><span class="line">        x = x / self.stdev</span><br><span class="line">        <span class="keyword">if</span> self.affine:</span><br><span class="line">            x = x * self.affine_weight</span><br><span class="line">            x = x + self.affine_bias</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_denormalize</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">if</span> self.affine:</span><br><span class="line">            x = x - self.affine_bias</span><br><span class="line">            x = x / (self.affine_weight + self.eps*self.eps)</span><br><span class="line">        x = x * self.stdev</span><br><span class="line">        x = x + self.mean</span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ICLR </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>SimMTM:A Simple Pre-Training Framework for Masked Time-Series Modeling</title>
+      <link href="/paper%20notes/SimMTM/"/>
+      <url>/paper%20notes/SimMTM/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #NeurIPS 2023<br>authors: Jiaxiang Dong, Haixu Wu, Haoran Zhang, Li Zhang, Jianmin Wang, Mingsheng Long<br>code:</p></div><p><img src="/img/SimMTM.png" alt=""></p><blockquote><p>原始序列生成多个 mask 后序列。encoder，projector。series-wise similarity 对 point-wiserepresentation 进行加权分配。加权分配后的 z’decoder，重构 x’。重构 loss(x, x’)，同时对其进行约束，同一个序列表征与其 mask 后的多个序列的表征为正样本，尽可能靠近。同一个 batch 中的其他序列表征及其 mask 后的多个序列的表征为负样本，尽可能远离。</p></blockquote><p><img src="/img/SimMTM-1.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NeurIPS </tag>
+            
+            <tag> 预训练 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>A TIME SERIES IS WORTH 64 WORDS:LONG-TERM FORECASTING WITH TRANSFORMERS</title>
+      <link href="/paper%20notes/PatchTST/"/>
+      <url>/paper%20notes/PatchTST/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICLR 2023<br>authors: Yuqi Nie, Nam H. Nguyen, Phanwadee Sinthong, Jayant Kalagnanam<br>code: <a href="https://github.com/yuqinie98/patchtst">https://github.com/yuqinie98/patchtst</a></p></div><p><img src="/img/PatchTST-1.png" alt=""></p><p>通道独立：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># input (bs, c_nums, T)</span></span><br><span class="line"><span class="comment"># input.reshape(bs*c_nums, -1, T)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#code</span></span><br><span class="line"><span class="comment"># x: [bs x nvars x patch_num x d_model]</span></span><br><span class="line">u = torch.reshape(x, (x.shape[<span class="number">0</span>]*x.shape[<span class="number">1</span>],x.shape[<span class="number">2</span>],x.shape[<span class="number">3</span>]))      </span><br><span class="line"><span class="comment"># u: [bs * nvars x patch_num x d_model]</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Transformer </tag>
+            
+            <tag> ICLR </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>TS2Vec:Towards Universal Representation of Time Series</title>
+      <link href="/paper%20notes/TS2Vec/"/>
+      <url>/paper%20notes/TS2Vec/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #AAAI 2022<br>authors: Zhihan Yue, Yujing Wang, Juanyong Duan, Tianmeng Yang, Congrui Huang, Yunhai Tong, Bixiong Xu<br>code: <a href="https://github.com/yuezhihan/ts2vec">https://github.com/yuezhihan/ts2vec</a></p></div><h2 id="1-Introduction-And-Conclusion">1 <strong>Introduction And Conclusion</strong></h2><h3 id="1-1-Problems">1.1 <strong>Problems</strong></h3><ol><li>大部分研究进行的是实例级别的表征（instance-level representations），但实例级表示可能不适合需要细粒度表示的任务 (e.g. ts foresting &amp; ts AD)。</li><li>很少有方法在不同粒度上区分多尺度上下文信息。</li><li>大多数时间序列表示方法的灵感来自 CV 和 NLP 领域的经验，这些领域具有很强的归纳偏差，这些假设并不总适用于时间序列。</li></ol><h3 id="1-2-Contributions"><strong>1.2 Contributions</strong></h3><ol><li>TS2Vec, a unified framework that learns contextual representations for arbitrary sub-series at various semantic levels.</li><li>hierarchical contrasting method in instance-wise and temporal dimensions</li><li>contextual consistency（正样本的选择）</li></ol><h2 id="2-Method">2 <strong>Method</strong></h2><p><img src="/img/TS2Vec.png" alt="Architecture of TS2Vec"></p><h3 id="输入-input-N-x-T-x-F">输入 input: N x T x F</h3><blockquote><p>random sample two overlapping subseries at time dimension. X1(N x T1 x F), T1=[a1, b1]; X2(N x T2 x F), T2=[a2, b2]. 0≤a1≤a2≤b1≤b2≤T, the overlapping segment [a2, b1]</p></blockquote><h3 id="Input-Projection-Layer">Input Projection Layer</h3><blockquote><p>X1→Z1(N x T1 x K), X2→Z2(N x T1 x K)</p></blockquote><h3 id="Timestamp-marking">Timestamp marking</h3><blockquote><p>along time axis with binary mask, Bernoulli distribution.</p></blockquote><h3 id="Dialated-Conv">Dialated Conv</h3><p>10 layer, and 2 Conv per layer.</p><p><img src="/img/TS2Vec-1.png" alt=""></p><h3 id="Hierarchical-contrasting">Hierarchical contrasting</h3><p><img src="/img/TS2Vec-2.png" alt=""></p><h4 id="Temporal-Contrastive-Loss">Temporal Contrastive Loss</h4><p>正负样本定义：来自同一个实体 (i.e. i x T1` x K &amp; i x T2` x K) 不同时刻。正样本，the same timestamp from two view. 负样本 (2(Ω-1))，different timestamp.</p><p><img src="/img/TS2Vec-3.png" alt="Ω is the set of timestamp within the overlap. (i.e. a2, b1)"></p><h4 id="Instance-wise-Contrastive-Loss">Instance-wise Contrastive Loss</h4><p>正负样本定义：来自同不同实体同一时刻。正样本，同一实体相同时刻 and from two view. 负样本 (2(B-1))，different instance.</p><p><img src="/img/TS2Vec-4.png" alt="B is the batch size"></p><h4 id="Overall-Loss">Overall Loss</h4><p><img src="/img/TS2Vec-5.png" alt=""></p><p>对于每一个层次，迭代计算</p><p><img src="/img/TS2Vec-6.png" alt=""></p><h2 id="3-Experiments"><strong>3 Experiments</strong></h2><h3 id="Time-Series-Classification">Time Series Classification</h3><p><img src="/img/TS2Vec-7.png" alt="Critical Difference (CD) diagram of representation learning methods on time series classification tasks with a confidence level of 95%"></p><h3 id="Time-Series-Forecasting">Time Series Forecasting</h3><p><img src="/img/TS2Vec-8.png" alt="Univariate time series forecasting results on MSE"></p><p><img src="/img/TS2Vec-9.png" alt="The running time (in seconds) comparison on multivariate forecasting task on ETTm1 dataset"></p><h3 id="Time-Series-Anomaly-Detection">Time Series Anomaly Detection</h3><p><img src="/img/TS2Vec-10.png" alt="Univariate time series anomaly detection results"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 预训练 </tag>
+            
+            <tag> 对比学习 </tag>
+            
+            <tag> AAAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>DCdetector-Dual Attention Contrastive Representation Learning for Time Series Anomaly Detection</title>
+      <link href="/paper%20notes/DCdetector/"/>
+      <url>/paper%20notes/DCdetector/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #KDD 2023<br>authors: Yiyuan Yang, Chaoli Zhang, Tian Zhou<br>code: <a href="https://github.com/DAMO-DI-ML/KDD2023-DCdetector">https://github.com/DAMO-DI-ML/KDD2023-DCdetector</a></p></div><p><img src="/img/DCdetector-2.png" alt=""></p><h2 id="1-Introduction-And-Conclusion">1 <strong>Introduction And Conclusion</strong></h2><p>这篇文章的归纳偏置和 Anomaly Transformer 相似。</p><blockquote><p>异常点和整个序列关联少（少见），和临近的点关联相对多；而正常点可能共享一些潜在的模式，与其他点的关联相对强。</p></blockquote><p>Anomaly Transformer 通过可学习高斯核和注意力权重分布的关联差异（差异小，注意力集中在局部，更可能是异常）来检测异常。对比于 Anomaly Transformer，这篇文章通过对比学习的方法实现了类似的目标。</p><p><img src="/img/DCdetector-3.png" alt=""></p><h3 id="1-1-Problems">1.1 <strong>Problems</strong></h3><blockquote><p>❓常见的异常检测的挑战，a. It takes work to get tables. b. 需要考虑时间依赖，多维度间依赖和非统计特征。c. 异常少见<br>基于重构的方法，在不受异常阻碍的情况下学习正常数据的良好重构模型具有挑战性。换言之，学习一个干净的，可以很好重构正常点的模型很困难</p></blockquote><h3 id="1-2-Contributions"><strong>1.2 Contributions</strong></h3><blockquote><p>💡提出了基于双重注意力的对比学习结构（dual-branch attention)【通道独立，多尺度】<br>训练只需要对比，而不需要重构误差（和 Anomaly Transformer 比较）</p></blockquote><h2 id="2-Method">2 <strong>Method</strong></h2><p><img src="/img/DCdetector-2.png" alt=""></p><h3 id="2-1-通道独立→patching">2.1 通道独立→patching</h3><p><img src="/img/DCdetector.png" alt=""></p><h3 id="2-2-patch-wise-attention，patch-in-attention-。（-上采样-多尺度）">2.2 <strong>patch-wise attention</strong>，patch-in attention**。（+**上采样 +<strong>多尺度）</strong></h3><p><img src="/img/DCdetector-4.png" alt=""></p><h4 id="2-2-1-Attention">2.2.1 Attention</h4><p>patch-wise，patch 和 patch 之间（P x N x d -&gt; N x d)；patch-in，patch 内部（P x N x d -&gt; P xd）。见上示意图。对于某个时刻的点来说，patch-wise 就是去计算它与其他几个 patch 相同位置的 attention，patch-in 就是计算同一个 patch 内它与其他点的 attention。</p><p>Wq 和 Wk 参数共享权重。</p><h4 id="2-2-2-上采样">2.2.2 上采样</h4><p>将他们的大小调整到一致</p><p><img src="/img/DCdetector-5.png" alt=""></p><h4 id="2-2-3-多尺度">2.2.3 多尺度</h4><p>是指 patch 的大小不同，最后每个不同的 patch size 相加。</p><p><img src="/img/DCdetector-6.png" alt=""></p><p>可以将这两种表示视为排列的多视图表示 (e.g. aabbcc -&gt; abcabc)。归纳偏置：正常点可以在排列下保持其表示，而异常点则不能。希望从这种对比学习中学习一种排列不变的表示。</p><h3 id="2-3-损失函数（KL散度）">2.3 损失函数（<strong>KL</strong>散度）</h3><p><img src="/img/DCdetector-7.png" alt=""></p><p><img src="/img/DCdetector-8.png" alt=""></p><h2 id="3-Experiments"><strong>3 Experiments</strong></h2><p><img src="/img/DCdetector-9.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 异常检测 </tag>
+            
+            <tag> 对比学习 </tag>
+            
+            <tag> KDD </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Time-Series Representation Learning via Temporal and Contextual Contrasting</title>
+      <link href="/paper%20notes/TS-TCC/"/>
+      <url>/paper%20notes/TS-TCC/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #IJCAI 2021<br>authors: Emadeldeen Eldele, Mohamed Ragab, Zhenghua Chen, Min Wu, Chee Keong Kwoh, Xiaoli Li and Cuntai Guan<br>code:</p></div><p>1. <strong>Introduction and Conclusion</strong></p><p>TS-TCC: Time-Series representation learning framework via Temporal and Contextual Contrasting (TS-TCC)</p><p><strong>Problems</strong></p><blockquote><p>现有的对比学习方法不能很好的强调时序的时间依赖<br>一些针对文本的数据增强技术不适用于时序数据</p></blockquote><p><strong>Contributions</strong></p><blockquote><p>强弱数据增强（产生 2 个增强后的序列）<br>两个对比学习模块（temporal contrasting and contextual contrasting）</p></blockquote><p>2. <strong>Method</strong></p><p>强弱增强</p><p>In this paper, weak augmentation is a jitter-and-scale strategy. Specifically, we add random variations to the signal and scale up its magnitude. For strong augmentation, we apply permutation-and-jitter strategy, where permutation includes splitting the signal into a random number of segments with a maximum of M and randomly shuffling them. Next, a random jittering is added to the permuted signal.</p><blockquote><p>在本文中，弱增强是一种抖动和缩放策略。具体来说，我们将随机变化添加到信号中，并放大其幅度。对于强增强，我们应用置换和抖动策略，其中置换包括将信号拆分为最大值为 M 的随机数目的段，并随机搅乱它们。接下来，将随机抖动添加到经排列的信号。</p></blockquote><p><img src="/img/TS-TCC.png" alt=""></p><p>Tempporal contrasting 借鉴了 CPC（与 CPC 不同之处在于正样本为对应的另一个序列中的 Z_(t+k)，而 CPC 只有一个序列)</p><p><img src="/img/TS-TCC-1.png" alt=""></p><p>Contextual contrasting，使用的是余弦相似度。最大化同一样本上下文，最小化其他样本（负样本）上下文。</p><p><img src="/img/TS-TCC-2.png" alt=""></p><p><em>对于含有 N 个数据的一批数据，通过强弱数据增强，产生的两个不同 view 的序列，每个数据都有上下文 c 生成（2N），i.e.对于当前某个 C_t(strong)，其正样本是另一个数据增强后序列的对应 C_t(weak)，其余 2N-2 个为负样本。</em></p><p><img src="/img/TS-TCC-3.png" alt=""></p><p>3. <strong>Experiments</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 对比学习 </tag>
+            
+            <tag> IJCAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Representation Learning with Contrastive Predictive Coding</title>
+      <link href="/paper%20notes/CPC/"/>
+      <url>/paper%20notes/CPC/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference:<br>authors: Aaron van den Oord, Yazhe Li, Oriol Vinyals<br>code:</p></div>  <p><img src="/img/CPC.png" alt=""></p><h2 id="NCE">NCE</h2><p><a href="https://www.zhihu.com/question/50043438" title="求通俗易懂解释下nce loss？ - 知乎 (zhihu.com)">求通俗易懂解释下nce loss？ - 知乎 (zhihu.com)</a></p><p><a href="https://spaces.ac.cn/archives/5617" title="“噪声对比估计”杂谈：曲径通幽之妙 - 科学空间|Scientific Spaces">“噪声对比估计”杂谈：曲径通幽之妙 - 科学空间|Scientific Spaces</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 对比学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Not All Features Matter-Enhancing Few-shot CLIP with Adaptive Prior Refinement</title>
+      <link href="/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/"/>
+      <url>/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICCV 2023<br>authors: Xiangyang Zhu, Renrui Zhang, Bowei He, Aojun Zhou, Dong Wang, Bin Zhao, Peng Gao<br>code: <a href="https://github.com/yangyangyang127/ape">https://github.com/yangyangyang127/ape</a></p></div><p><img src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png" alt=""></p><p><img src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-1.png" alt=""></p><blockquote><p>在下游任务上，考虑到数据分布，CLIP 提取的特征可能并不全是有用的，因此作者试图为每个下游数据集提纯个性化的特征。通过最大化类间差异，或者说最小化类间相似度，来选择合适的特征。对于一个有 C 个类的下游任务，计算所有类的所有样本表征之间平均相似度。然而，为整个数据集（即使是少数样本）计算 S 的计算成本很高，考虑到 CLIP 的对比预训练，其中视觉语言表示已经很好地对齐，下游类别的文本特征可以被视为一组视觉原型，这样的原型可以近似不同类别的视觉特征在嵌入空间中的聚类中心。所以作者利用模板“a photo of a [CLASS]”并将所有类别名称放入 [CLASS] 作为 CLIP 的输入。然后我们将下游类别的文本特征表示为 xi。同时因为 xi 已经经过 L2 标准化，每一个通道间的余弦相似度可简单表示为 xik 与 xjk 的乘积。Sk 就表示第 k 个通道的平均类间相似度。同理，第 k 个通道的类间方差可以用 Vk 表示，其中 xk-bar 表示第 k 个通道的平均值。作者使用 Vk 来消除类别之间几乎保持不变的特征通道，这些特征通道没有表现出类间差异，对分类影响很小。作者整体的目标是希望最小化类间相似度，同时去除类别间几乎保持不变的特征通道。最后，作者将相似性和方差标准与平衡因子 λ 混合作为最终量。选择最小的 Q 个 Jk 作为最终的细化特征通道，这表明类间差异和区分度最大。图显示了自适应细化模块带来的好处。对于细化后的 512 个特征通道，图像之间的类间相似度（‘Inter-class Image-Image’）已大大降低，表明类别区分度较强。同时，我们的细化更好地对齐了配对的图像文本特征（“Matched ImageText”），并排除了未配对的特征（“Unmatched Image-Text”），从而增强了 CLIP 用于下游识别的多模态对应性。</p></blockquote><p><img src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-2.png" alt=""></p><p><img src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-3.png" alt=""></p><blockquote><p>在最后的式子中，其中α作为平衡因子，diag(·) 表示对角化。第一项代表 CLIP 的零样本预测，并包含其预先训练的先验知识。第二项表示缓存模型的小样本预测，它基于细化后的特征通道和 RF ‘W’ 的重新权重调整。</p></blockquote><blockquote><p>在需要训练 APE 中，类似与无需训练的 APE，只不过额外的加入了一个轻量的类别残差，它由 C 个可学习的嵌入组成，每个 embedding 对应一个下游类别，旨在少样本训练过程中优化不同类别的细化的 Q 个特征通道。为了保留嵌入空间中的视觉 - 语言对应关系，将 Res 同时应用于文本特征 W 和训练集特征 F′。通过仅训练此类小规模参数，APE-T 避免了昂贵的缓存模型微调，并通过更新两种模式的细化特征来实现卓越的性能。</p></blockquote><blockquote><p>fW,表示测试图像和类别文本之间的余弦相似度，原始的 CLIP 零样本预测。</p></blockquote><blockquote><p>f’F’ 表示具有调制标量β 的缓存模型的图像 - 图像相似度。参考基于先验的方法。</p></blockquote><blockquote><p>此外，作者进一步考虑了 F′和 W′之间的关系，表示 CLIP 对少样本训练数据的零样本预测能力，为了评估这种识别能力，作者计算了 CLIP 对少样本集的预测和他们 one-hot 标签 L 之间的关系，其表示为 KL 散度。CLIP 对某个少样本训练集的类预测越好，越接近真实的标签，其值越小，预测越差，值越大。其中γ是平滑因子。</p></blockquote><blockquote><p>F’W ’ 可以看作是缓存模型中每个训练特征的分数，表示通过 CLIP 提取的表示的精度，以及其对最终预测的贡献有多大。</p></blockquote><p>通过自适应先验细化和三边关系分析，APE 可以高效且有效地增强少样本 CLIP。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 预训练 </tag>
+            
+            <tag> ICCV </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks</title>
+      <link href="/paper%20notes/CycleGAN/"/>
+      <url>/paper%20notes/CycleGAN/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #ICCV 2017<br>authors: Jun-Yan Zhu, Taesung Park, Phillip Isola, Alexei A. Efros<br>code: <a href="https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix">https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix</a></p></div><p><img src="/img/CycleGAN.png" alt=""></p><p>传统 GAN 有一个生成器和判别器，生成器 G 用于生成样本，判别器 D 用于判断这个样本是否为真样本。G 用随机噪声生成假图，D 根据真假图进行二分类的训练。D 根据输入的图像生成 score，这个 score 表示 G 生成的图像是否成功，进而进一步的训练 G 生成更好的图像。</p><p>在训练过程中，生成网络 G 的目标就是尽量生成真实的图片去欺骗判别网络 D。而 D 的目标就是尽量把 G 生成的图片和真实的图片分别开来。整个式子由两项构成。x 表示真实图片，z 表示输入 G 网络的噪声，而 G(z) 表示 G 网络生成的图片.D(x) 表示 D 网络判断真实图片是否真实的概率（因为 x 就是真实的，所以对于 D 来说，这个值越接近 1 越好）。而 D(G(z)) 是 D 网络判断 G 生成的图片的是否真实的概率。G 的目的：G 希望自己生成的图片“越接近真实越好”。也就是说，G 希望 D(G(z)) 尽可能得大，这时 V(D,G) 会变小。因此式子的最前面的记号是 min_G。D 的目的：D 的能力越强，D(x) 应该越大，D(G(x)) 应该越小。这时 V(D,G) 会变大。因此式子对于 D 来说是求最大 (max_D)。</p><p>CycleGAN 其实就是一个 X→Y 单向 GAN 加上一个 Y→X 单向 GAN。两个 GAN 共享两个生成器，然后各自带一个判别器，所以加起来总共有两个判别器和两个生成器。一个单向 GAN 有两个 loss，而 CycleGAN 加起来总共有四个 loss。</p><p>Dx: X&amp;F(y) ，判别器 Dx 判别到底是真 X 还是 F 根据 Y 生成的与 X 同分布的数据</p><p>Dy:Y &amp; G(x)，判别器 Dy 判别到底是真 Y 还是 G 根据 X 生成的与 Y 同分布的数据</p><p>将对抗性损失应用于两个映射函数，</p><p>循环一致性损失目的就是指 domainX 通过生成器 G 到 domainY 后再通过生成器 F 反向回到 domainX, 重新生成的与原先的差异尽可能小，domainY 到 domainX 再到 domainY 也同理，防止生成器 G 与 F 相互矛盾，即两个生成器生成数据之后还能变换回来近似看成 X-&gt;Y-&gt;X</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ICCV </tag>
+            
+            <tag> GAN </tag>
+            
+            <tag> 迁移学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Learning Transferable Visual Models From Natural Language Supervision</title>
+      <link href="/paper%20notes/CLIP/"/>
+      <url>/paper%20notes/CLIP/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #PCML 2021<br>authors: Al ec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, andhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, Ilya Sutskever<br>code:</p></div><h2 id="Learning-Transferable-Visual-Models-From-Natural-Language-Supervision">Learning Transferable Visual Models From Natural Language Supervision</h2><p><img src="/img/CLIP-2.png" alt=""></p><p>1. <strong>Introduction and Conclusion</strong></p><p>1.1 <strong>Problems</strong></p><p>Could scalable pre-training methods which learn directly from web text result in a similar breakthrough in computer vision</p><p>1.2 <strong>Contributions</strong></p><p>|main contribution is studying its behavior at large scale. 利用自然语言的文本信息，作为监督信号来学习视觉特征。</p><p>1.3 <strong>Motivation</strong></p><p>背景：直接从原始文本中学习的预训练方法在过去几年中彻底改变了 NLP，实现了零样本迁移到下游数据。比如 gpt-3 一类的模型，几乎不需要特定于数据集的训练数据。而当前的计算机视觉（CV）模型通常被训练用于预测有限的物体类别，这样的模型通常还需要额外的标注数据来完成训练时未曾见过的视觉“概念”。在 NLP 中，预训练的方法目前已经被验证很成功，直接从网络文本中学习的可扩展<strong>预训练</strong>方法能否在计算机视觉领域带来类似的突破？</p><p>使用自然语言学习的方法可以从互联网上大量的文本数据中学习；</p><p>与大多数无监督或自监督的学习方法相比，从自然语言中学习不只是学习一个表征，而且还将该表征与语言联系起来，从而实现灵活的 zero-shot learning。</p><p>2. <strong>Method</strong></p><p>工作的核心是从自然语言与图像配对的监督中学习感知</p><p>2.1 <strong>Creating a Sufficiently Large Dataset - 400 million (image, text) pairs</strong></p><p>2.2 <strong>Selecting an Efficient Pre-Training Method - contrastive representation learning</strong></p><p><img src="/img/CLIP-3.png" alt=""></p><p>2.3 <strong>Choosing and Scaling a Model</strong></p><p>ResNet50, Vision Transformer(ViT)</p><p>Transformer</p><p>2.4 <strong>Pre-training</strong></p><p>The largest ResNet model, RN50x64, took 18 days to train on 592 V100 GPUs while the largest Vision Transformer took 12 days on 256 V100 GPUs.</p><p>由于数据集很大，因此不用担心过拟合问题；</p><p>没有加载预训练权重，完全从零开始训练；</p><p>没有使用非线性激活函数，而是直接使用一个线性映射；</p><p>没有使用文本数据增强（这里主要指从文本中选取一个句子），因为数据集中的文本只有一个句子；</p><p>图像数据增强方面只使用了随机裁剪；</p><p>温度参数 t 在训练过程中也被优化。</p><p><img src="/img/CLIP-2.png" alt=""></p><p>3. <strong>Experiments</strong></p><p><strong>zero-shot transfer</strong></p><p>zero-shot 分类</p><p><img src="/img/CLIP.png" alt=""></p><p><img src="/img/CLIP-4.png" alt=""></p><p><img src="/img/CLIP-5.png" alt=""></p><p><img src="/img/CLIP-6.png" alt=""></p><p>4. <strong>Limitations</strong></p><p><img src="/img/CLIP-7.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 预训练 </tag>
+            
+            <tag> 对比学习 </tag>
+            
+            <tag> PCML </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Robust Anomaly Detection for Multivariate Time Series through Stochastic Recurrent Neural Network</title>
+      <link href="/paper%20notes/OmniAnomaly/"/>
+      <url>/paper%20notes/OmniAnomaly/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #KDD 2019<br>authors: Ya Su, Youjian Zhao, Chenhao Niu, Rong Liu, Wei Sun, Dan Pei<br>code: <a href="https://github.com/smallcowbaby/OmniAnomaly">https://github.com/smallcowbaby/OmniAnomaly</a></p></div><p><img src="/img/OmniAnomaly.png" alt=""></p><p><img src="/img/OmniAnomaly-1.png" alt=""></p><p><img src="/img/OmniAnomaly-2.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 异常检测 </tag>
+            
+            <tag> KDD </tag>
+            
+            <tag> VAE </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Triformer:Triangular, Variable-Specific Attentions for Long Sequence Multivariate Time Series Forecasting–Full Version</title>
+      <link href="/paper%20notes/Triformer/"/>
+      <url>/paper%20notes/Triformer/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference:<br>authors: Ran-Gabriel Cirstea, Chenjuan Guo, Bin Yang, Tung Kieu, Xuanyi Dong, Shirui Pan<br>code:</p></div>  <p><strong>Introduction and Conclusion</strong></p><p>规范的 self attention 具有二次复杂度。因此效率较低。 &amp;# x20;</p><p>现有研究由于对所有变量的时间序列使用相同的模型参数空间 (如投影矩阵)，因此准确性不足。</p><p>Triformer：</p><p>1. 线性复杂度：patch attention， 为 patch 引入伪时间戳<br>2. Variable-specific 参数：提出一种轻量级方法，使不同变量的时间序列具有不同的模型参数集</p><p><img src="/img/Triformer.png" alt=""></p><p><strong>Limitations</strong></p><p>可学习参数 (pseudo-timestamps) 的数量与预测设置有关，在动态输入长度的应用中使用受限。</p><p><em>将 patch 的数量与伪时间戳的数量解耦（引入生成器）</em></p><p>cannot forecast different horizons once trained.</p><p><em>encoder-decoder architecture</em></p><p><strong>Method</strong><br><img src="/img/Triformer-1.png" alt=""></p><p><img src="/img/Triformer-2.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Transformer </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</title>
+      <link href="/paper%20notes/Autoformer/"/>
+      <url>/paper%20notes/Autoformer/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #NeurIPS 2021<br>authors: Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long<br>code:</p></div><p>之前基于 Transformer 的时间序列预测模型，通过自注意力机制（self-attention）来捕捉时刻间的依赖，在时序预测上取得了一些进展。但是在长期序列预测中，仍存在不足：</p><ul><li>长序列中的复杂时间模式使得<strong>注意力机制难以发现可靠的时序依赖</strong>。</li><li>基于 Transformer 的模型不得不使用<strong>稀疏形式的注意力机制</strong>来应对二次复杂度的问题，但造成了<strong>信息利用的瓶颈</strong>。</li></ul><p><img src="/img/Autoformer.png" alt=""></p><p>为突破上述问题，我们全面革新了 Transformer，并提出了名为 Autoformer 的模型，主要包含以下创新：</p><ul><li>突破将序列分解作为预处理的传统方法，提出<strong>深度分解架构（Decomposition Architecture）</strong>，能够从复杂时间模式中分解出可预测性更强的组分。</li><li>基于随机过程理论，提出<strong>自相关机制（Auto-Correlation Mechanism）</strong>，代替点向连接的注意力机制，实现序列级（series-wise）连接和复杂度，打破信息利用瓶颈。</li></ul><p>在长期预测问题中，Autoformer 在能源、交通、经济、气象、疾病五大时序领域大幅超越之前 SOTA，实现<strong>38%</strong> 的相对效果提升。</p><p><img src="/img/Autoformer-1.png" alt=""></p><h2 id="分解">分解</h2><p>对输入序列进行分解，分解为季节性部分和趋势部分。（趋势，短期波动；季节性：长期）<br><strong>moving average</strong></p><h2 id="Auto-correlation">Auto-correlation</h2><blockquote><p>理解：对于长度为 a 的时延，可以将序列划分为 L/a 个段。对于当前的这个时延段，计算与其他“段”的 R 值。</p><p>时延总共有 k 种（Top-k），a in {1, … , L}。a=1 时，等价于当前时间点与其他时间点的 R，要计算 L 次；a=2 时，共划分为 L/2 个“段”，要计算 L/2 次……[L+L/2+…L/a]，所以 O(k L)，k=c lnL，O(lnL L)。“更有可能是序列周期的 a 值对整个序列贡献大（加权平均）”</p><p>而传统的 self-attention，是点对点的。</p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NeurIPS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Informer-Beyond Efficient Transformer for Long Sequence Time-Series Forecasting</title>
+      <link href="/paper%20notes/Informer/"/>
+      <url>/paper%20notes/Informer/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #AAAI 2021<br>authors: Haoyi Zhou, Shanghang Zhang, Jieqi Peng, Shuai Zhang, Jianxin Li, Hui Xiong, Wancai Zhang<br>code:</p></div><p><img src="/img/Informer.png" alt=""></p><p><img src="/img/Informer-1.png" alt=""></p><h2 id="ProbSparse-Self-attention">ProbSparse Self-attention</h2><p>对 transformer 的 self-attention 机制进行改进，精简 Q（clogN)。(略掉了一些 qi，且在事先计算 M 时就对 q 做了挑选，LKlnLQ，再计算出 M 后，对 top-u 个做 self-attention)<br>“Top-u queries under the sparsity measurement M (q, K), u=c”</p><p>自注意力蒸馏，改进内存使用。（先卷积后最大池化，stride=2，对 X(t) 下采样，使下一层输入为 L/2）</p><p>生成式，一次输出所有预测结果。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Transformer </tag>
+            
+            <tag> AAAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>A Deep Neural Network for Unsupervised Anomaly Detection and Diagnosis in Multivariate Time Series Data</title>
+      <link href="/paper%20notes/MSCRED/"/>
+      <url>/paper%20notes/MSCRED/</url>
+      
+        <content type="html"><![CDATA[<div class="note info simple"><p>conference: #AAAI 2019<br>authors: Chuxu Zhang, Dongjin Song, Yuncong Chen, Xinyang Feng, Cristian Lumezanu, Wei Cheng, Jingchao Ni, Bo Zong, Haifeng Chen, Nitesh V. Chawla<br>code: <a href="https://github.com/Zhang-Zhi-Jie/Pytorch-MSCRED">https://github.com/Zhang-Zhi-Jie/Pytorch-MSCRED</a></p></div><p><img src="/img/MSCRED-2.png" alt=""></p><p>1. <strong>Introduction and Conclusion</strong></p><p>Problems：<br>Cannot capture temporal dependencies across different time steps.Noise - affect the generalization capability, increase the false positive detections.The existing methods for root cause analysis are sensitive to noise and cannot handle this issue.</p><p>Contributions：</p><ol><li>anomaly detection and diagnosis problem as three underlying tasks, i.e., anomaly detection, root cause identification, and anomaly severity (duration) interpretation</li><li>MSCRED - the first model that considers correlations among multivariate time series for anomaly detection and can jointly resolve all the three tasks.</li></ol><p>给定 n 维时序数据，假设数据不存在异常<br>Anomaly detection：检测 t 时刻之后某一时刻的异常事件<br>Anomaly diagnosis：识别最有可能导致异常的时间序列，并且量化异常程度。<br>Intuition：如果 MSCRED 之前从未观察到类似的系统状态，它可能无法很好地重建签名矩阵<br>关于严重程度，文中假设事件的严重性与异常的持续时间成正比。</p><p><strong>MSCRED</strong></p><p>Multi-Scale Convolutional Recurrent Encoder-Decoder</p><p>multi-scale (resolution) signature matrices: characterize multiple levels of the system statuses</p><p>a convolutional encoder: encode the inter-sensor (time series) correlations</p><p>encode the inter-sensor (time series) correlations: capture the temporal patterns</p><p>convolutional decoder: reconstruct the input signature matrices</p><p>the residual signature matrices: detect and diagnose anomalies</p><p><img src="/img/MSCRED-3.png" alt=""></p><p><strong>Conclusion</strong></p><p>The framework is able to model both intersensor **correlations **and <strong>temporal dependencies</strong> of multivariate time series.</p><p>Extensive empirical studies on a synthetic dataset as well as a power plant dataset demonstrated that MSCRED can outperform <strong>stateof-the-art</strong> baseline methods.</p><p>2. <strong>Method</strong></p><p><img src="/img/MSCRED-2.png" alt=""></p><p><img src="/img/MSCRED.png" alt=""></p><p><img src="/img/MSCRED-4.png" alt=""></p><p><img src="/img/MSCRED-5.png" alt=""></p><p>整个过程的损失函数定义为重构误差。后续在原始 Signature Matrices 和重构 Signature Matrices 的差异矩阵上，进行异常检测和诊断。</p><p>3. <strong>Experiments</strong></p><p><img src="/img/MSCRED-6.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper </category>
+          
+          <category> 时间序列 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 异常检测 </tag>
+            
+            <tag> AAAI </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>

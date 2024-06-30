@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting | Jacob</title><meta name="author" content="qcshentu"><meta name="copyright" content="qcshentu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Autoformer。添加decomposition block提取模型中隐藏状态的内在复杂时序趋势。提出Auto-Correlation机制替代self-attention，其考虑sub-series间的相似度能更好的捕捉到趋势性，不仅保证了O(LlnL)的复杂度，也防止了信息的丢失，做到了又快又好。将点对点的attention改进为sub-series之间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting">
+<meta property="og:url" content="http://qcshentu.github.io/paper%20notes/Autoformer/index.html">
+<meta property="og:site_name" content="Jacob">
+<meta property="og:description" content="Autoformer。添加decomposition block提取模型中隐藏状态的内在复杂时序趋势。提出Auto-Correlation机制替代self-attention，其考虑sub-series间的相似度能更好的捕捉到趋势性，不仅保证了O(LlnL)的复杂度，也防止了信息的丢失，做到了又快又好。将点对点的attention改进为sub-series之间。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qcshentu.github.io/img/Autoformer-1.png">
+<meta property="article:published_time" content="2023-07-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-30T13:33:04.162Z">
+<meta property="article:author" content="qcshentu">
+<meta property="article:tag" content="NeurIPS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qcshentu.github.io/img/Autoformer-1.png"><link rel="shortcut icon" href="/icon/favicon.svg"><link rel="canonical" href="http://qcshentu.github.io/paper%20notes/Autoformer/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-30 21:33:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/post_style.css"><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/icon/avatar-compress.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/Autoformer-1.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Jacob"><span class="site-name">Jacob</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Autoformer: Decomposition Transformers with Auto-Correlation for Long-Term Series Forecasting</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-07-05T16:00:00.000Z" title="发表于 2023-07-06 00:00:00">2023-07-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Paper/">Paper</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Paper/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/">时间序列</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note info simple"><p>conference: #NeurIPS 2021<br>
+authors: Haixu Wu, Jiehui Xu, Jianmin Wang, Mingsheng Long<br>
+code:</p>
+</div>
+<p>之前基于 Transformer 的时间序列预测模型，通过自注意力机制（self-attention）来捕捉时刻间的依赖，在时序预测上取得了一些进展。但是在长期序列预测中，仍存在不足：</p>
+<ul>
+<li>长序列中的复杂时间模式使得<strong>注意力机制难以发现可靠的时序依赖</strong>。</li>
+<li>基于 Transformer 的模型不得不使用<strong>稀疏形式的注意力机制</strong>来应对二次复杂度的问题，但造成了<strong>信息利用的瓶颈</strong>。</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Autoformer.png" alt=""></p>
+<p>为突破上述问题，我们全面革新了 Transformer，并提出了名为 Autoformer 的模型，主要包含以下创新：</p>
+<ul>
+<li>突破将序列分解作为预处理的传统方法，提出<strong>深度分解架构（Decomposition Architecture）</strong>，能够从复杂时间模式中分解出可预测性更强的组分。</li>
+<li>基于随机过程理论，提出<strong>自相关机制（Auto-Correlation Mechanism）</strong>，代替点向连接的注意力机制，实现序列级（series-wise）连接和复杂度，打破信息利用瓶颈。</li>
+</ul>
+<p>在长期预测问题中，Autoformer 在能源、交通、经济、气象、疾病五大时序领域大幅超越之前 SOTA，实现<strong>38%</strong> 的相对效果提升。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Autoformer-1.png" alt=""></p>
+<h2 id="分解">分解</h2>
+<p>对输入序列进行分解，分解为季节性部分和趋势部分。（趋势，短期波动；季节性：长期）<br>
+<strong>moving average</strong></p>
+<h2 id="Auto-correlation">Auto-correlation</h2>
+<blockquote>
+<p>理解：对于长度为 a 的时延，可以将序列划分为 L/a 个段。对于当前的这个时延段，计算与其他“段”的 R 值。</p>
+<p>时延总共有 k 种（Top-k），a in {1, … , L}。a=1 时，等价于当前时间点与其他时间点的 R，要计算 L 次；a=2 时，共划分为 L/2 个“段”，要计算 L/2 次……[L+L/2+…L/a]，所以 O(k L)，k=c lnL，O(lnL L)。“更有可能是序列周期的 a 值对整个序列贡献大（加权平均）”</p>
+<p>而传统的 self-attention，是点对点的。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://qcshentu.github.io">qcshentu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://qcshentu.github.io/paper%20notes/Autoformer/">http://qcshentu.github.io/paper%20notes/Autoformer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://qcshentu.github.io" target="_blank">Jacob</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NeurIPS/">NeurIPS</a></div><div class="post_share"><div class="social-share" data-image="/img/Autoformer-1.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/paper%20notes/Triformer/" title="Triformer:Triangular, Variable-Specific Attentions for Long Sequence Multivariate Time Series Forecasting–Full Version"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Triformer-2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Triformer:Triangular, Variable-Specific Attentions for Long Sequence Multivariate Time Series Forecasting–Full Version</div></div></a></div><div class="next-post pull-right"><a href="/paper%20notes/Informer/" title="Informer-Beyond Efficient Transformer for Long Sequence Time-Series Forecasting"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Informer.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Informer-Beyond Efficient Transformer for Long Sequence Time-Series Forecasting</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/paper%20notes/D3R/" title="Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/D3R-1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-17</div><div class="title">Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection</div></div></a></div><div><a href="/paper%20notes/SimMTM/" title="SimMTM:A Simple Pre-Training Framework for Masked Time-Series Modeling"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/SimMTM.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-17</div><div class="title">SimMTM:A Simple Pre-Training Framework for Masked Time-Series Modeling</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/icon/avatar-compress.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">qcshentu</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">分解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Auto-correlation"><span class="toc-number">2.</span> <span class="toc-text">Auto-correlation</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/UniTST/" title="UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting">UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting</a><time datetime="2024-06-29T16:00:00.000Z" title="发表于 2024-06-30 00:00:00">2024-06-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86/" title="Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress">Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress</a><time datetime="2024-03-01T16:00:00.000Z" title="发表于 2024-03-02 00:00:00">2024-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/D3R/" title="Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection">Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection</a><time datetime="2024-02-16T16:00:00.000Z" title="发表于 2024-02-17 00:00:00">2024-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/MICN/" title="MICN: MULTI-SCALE LOCAL AND GLOBAL CONTEXT MODELING FOR LONG-TERM SERIES FORECASTING">MICN: MULTI-SCALE LOCAL AND GLOBAL CONTEXT MODELING FOR LONG-TERM SERIES FORECASTING</a><time datetime="2024-02-16T16:00:00.000Z" title="发表于 2024-02-17 00:00:00">2024-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/PatchMixer/" title="PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting">PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting</a><time datetime="2024-02-07T16:00:00.000Z" title="发表于 2024-02-08 00:00:00">2024-02-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: rgb(17, 34, 35)"><div id="footer-wrap"><div class="copyright">&copy;2024 By qcshentu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

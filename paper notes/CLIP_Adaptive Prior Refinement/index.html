@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Not All Features Matter-Enhancing Few-shot CLIP with Adaptive Prior Refinement | Jacob</title><meta name="author" content="qcshentu"><meta name="copyright" content="qcshentu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="APE。改进CLIP，增强其few-shot和zero-shot能力。提出APE，同时提出了一个探索 CLIP 提取的视觉-语言表征之间的三边相似性的框架，以实现有效的小样本学习。通过自适应先验细化和三边关系分析，APE 可以高效且有效地增强少样本CLIP。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Not All Features Matter-Enhancing Few-shot CLIP with Adaptive Prior Refinement">
+<meta property="og:url" content="http://qcshentu.github.io/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/index.html">
+<meta property="og:site_name" content="Jacob">
+<meta property="og:description" content="APE。改进CLIP，增强其few-shot和zero-shot能力。提出APE，同时提出了一个探索 CLIP 提取的视觉-语言表征之间的三边相似性的框架，以实现有效的小样本学习。通过自适应先验细化和三边关系分析，APE 可以高效且有效地增强少样本CLIP。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://qcshentu.github.io/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png">
+<meta property="article:published_time" content="2023-07-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-30T13:33:04.162Z">
+<meta property="article:author" content="qcshentu">
+<meta property="article:tag" content="预训练">
+<meta property="article:tag" content="ICCV">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://qcshentu.github.io/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png"><link rel="shortcut icon" href="/icon/favicon.svg"><link rel="canonical" href="http://qcshentu.github.io/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":true,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Not All Features Matter-Enhancing Few-shot CLIP with Adaptive Prior Refinement',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-06-30 21:33:04'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/post_style.css"><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/icon/avatar-compress.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Jacob"><span class="site-name">Jacob</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Not All Features Matter-Enhancing Few-shot CLIP with Adaptive Prior Refinement</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-07-11T16:00:00.000Z" title="发表于 2023-07-12 00:00:00">2023-07-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Paper/">Paper</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note info simple"><p>conference: #ICCV 2023<br>
+authors: Xiangyang Zhu, Renrui Zhang, Bowei He, Aojun Zhou, Dong Wang, Bin Zhao, Peng Gao<br>
+code: <a target="_blank" rel="noopener" href="https://github.com/yangyangyang127/ape">https://github.com/yangyangyang127/ape</a></p>
+</div>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png" alt=""></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-1.png" alt=""></p>
+<blockquote>
+<p>在下游任务上，考虑到数据分布，CLIP 提取的特征可能并不全是有用的，因此作者试图为每个下游数据集提纯个性化的特征。通过最大化类间差异，或者说最小化类间相似度，来选择合适的特征。对于一个有 C 个类的下游任务，计算所有类的所有样本表征之间平均相似度。然而，为整个数据集（即使是少数样本）计算 S 的计算成本很高，考虑到 CLIP 的对比预训练，其中视觉语言表示已经很好地对齐，下游类别的文本特征可以被视为一组视觉原型，这样的原型可以近似不同类别的视觉特征在嵌入空间中的聚类中心。所以作者利用模板“a photo of a [CLASS]”并将所有类别名称放入 [CLASS] 作为 CLIP 的输入。然后我们将下游类别的文本特征表示为 xi。同时因为 xi 已经经过 L2 标准化，每一个通道间的余弦相似度可简单表示为 xik 与 xjk 的乘积。Sk 就表示第 k 个通道的平均类间相似度。同理，第 k 个通道的类间方差可以用 Vk 表示，其中 xk-bar 表示第 k 个通道的平均值。作者使用 Vk 来消除类别之间几乎保持不变的特征通道，这些特征通道没有表现出类间差异，对分类影响很小。作者整体的目标是希望最小化类间相似度，同时去除类别间几乎保持不变的特征通道。最后，作者将相似性和方差标准与平衡因子 λ 混合作为最终量。选择最小的 Q 个 Jk 作为最终的细化特征通道，这表明类间差异和区分度最大。图显示了自适应细化模块带来的好处。对于细化后的 512 个特征通道，图像之间的类间相似度（‘Inter-class Image-Image’）已大大降低，表明类别区分度较强。同时，我们的细化更好地对齐了配对的图像文本特征（“Matched ImageText”），并排除了未配对的特征（“Unmatched Image-Text”），从而增强了 CLIP 用于下游识别的多模态对应性。</p>
+</blockquote>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-2.png" alt=""></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement-3.png" alt=""></p>
+<blockquote>
+<p>在最后的式子中，其中α作为平衡因子，diag(·) 表示对角化。第一项代表 CLIP 的零样本预测，并包含其预先训练的先验知识。第二项表示缓存模型的小样本预测，它基于细化后的特征通道和 RF ‘W’ 的重新权重调整。</p>
+</blockquote>
+<blockquote>
+<p>在需要训练 APE 中，类似与无需训练的 APE，只不过额外的加入了一个轻量的类别残差，它由 C 个可学习的嵌入组成，每个 embedding 对应一个下游类别，旨在少样本训练过程中优化不同类别的细化的 Q 个特征通道。为了保留嵌入空间中的视觉 - 语言对应关系，将 Res 同时应用于文本特征 W 和训练集特征 F′。通过仅训练此类小规模参数，APE-T 避免了昂贵的缓存模型微调，并通过更新两种模式的细化特征来实现卓越的性能。</p>
+</blockquote>
+<blockquote>
+<p>fW,表示测试图像和类别文本之间的余弦相似度，原始的 CLIP 零样本预测。</p>
+</blockquote>
+<blockquote>
+<p>f’F’ 表示具有调制标量β 的缓存模型的图像 - 图像相似度。参考基于先验的方法。</p>
+</blockquote>
+<blockquote>
+<p>此外，作者进一步考虑了 F′和 W′之间的关系，表示 CLIP 对少样本训练数据的零样本预测能力，为了评估这种识别能力，作者计算了 CLIP 对少样本集的预测和他们 one-hot 标签 L 之间的关系，其表示为 KL 散度。CLIP 对某个少样本训练集的类预测越好，越接近真实的标签，其值越小，预测越差，值越大。其中γ是平滑因子。</p>
+</blockquote>
+<blockquote>
+<p>F’W ’ 可以看作是缓存模型中每个训练特征的分数，表示通过 CLIP 提取的表示的精度，以及其对最终预测的贡献有多大。</p>
+</blockquote>
+<p>通过自适应先验细化和三边关系分析，APE 可以高效且有效地增强少样本 CLIP。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://qcshentu.github.io">qcshentu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://qcshentu.github.io/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/">http://qcshentu.github.io/paper%20notes/CLIP_Adaptive%20Prior%20Refinement/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://qcshentu.github.io" target="_blank">Jacob</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%A2%84%E8%AE%AD%E7%BB%83/">预训练</a><a class="post-meta__tags" href="/tags/ICCV/">ICCV</a></div><div class="post_share"><div class="social-share" data-image="/img/Not%20All%20Features%20Matter-%20Enhancing%20Few-shot%20CLIP%20with%20Adaptive%20Prior%20Refinement.png" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/paper%20notes/CPC/" title="Representation Learning with Contrastive Predictive Coding"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/CPC.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Representation Learning with Contrastive Predictive Coding</div></div></a></div><div class="next-post pull-right"><a href="/paper%20notes/CycleGAN/" title="Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/CycleGAN.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/paper%20notes/CLIP/" title="Learning Transferable Visual Models From Natural Language Supervision"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/CLIP.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-10</div><div class="title">Learning Transferable Visual Models From Natural Language Supervision</div></div></a></div><div><a href="/paper%20notes/SimMTM/" title="SimMTM:A Simple Pre-Training Framework for Masked Time-Series Modeling"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/SimMTM.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-17</div><div class="title">SimMTM:A Simple Pre-Training Framework for Masked Time-Series Modeling</div></div></a></div><div><a href="/paper%20notes/TS2Vec/" title="TS2Vec:Towards Universal Representation of Time Series"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/TS2Vec.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-08-28</div><div class="title">TS2Vec:Towards Universal Representation of Time Series</div></div></a></div><div><a href="/paper%20notes/CycleGAN/" title="Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/CycleGAN.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-11</div><div class="title">Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/icon/avatar-compress.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">qcshentu</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/UniTST/" title="UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting">UniTST: Effectively Modeling Inter-Series and Intra-Series Dependencies for Multivariate Time Series Forecasting</a><time datetime="2024-06-29T16:00:00.000Z" title="发表于 2024-06-30 00:00:00">2024-06-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/Benchmark_UCR%E6%95%B0%E6%8D%AE%E9%9B%86/" title="Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress">Current Time Series Anomaly Detection Benchmarks are Flawed and are Creating the Illusion of Progress</a><time datetime="2024-03-01T16:00:00.000Z" title="发表于 2024-03-02 00:00:00">2024-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/D3R/" title="Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection">Drift doesn’t Matter: Dynamic Decomposition with Diffusion Reconstruction for Unstable Multivariate Time Series Anomaly Detection</a><time datetime="2024-02-16T16:00:00.000Z" title="发表于 2024-02-17 00:00:00">2024-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/MICN/" title="MICN: MULTI-SCALE LOCAL AND GLOBAL CONTEXT MODELING FOR LONG-TERM SERIES FORECASTING">MICN: MULTI-SCALE LOCAL AND GLOBAL CONTEXT MODELING FOR LONG-TERM SERIES FORECASTING</a><time datetime="2024-02-16T16:00:00.000Z" title="发表于 2024-02-17 00:00:00">2024-02-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/paper%20notes/PatchMixer/" title="PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting">PatchMixer: A Patch-Mixing Architecture for Long-Term Time Series Forecasting</a><time datetime="2024-02-07T16:00:00.000Z" title="发表于 2024-02-08 00:00:00">2024-02-08</time></div></div></div></div></div></div></main><footer id="footer" style="background: rgb(17, 34, 35)"><div id="footer-wrap"><div class="copyright">&copy;2024 By qcshentu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/copy-tex.min.js"></script><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
